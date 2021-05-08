@@ -13,9 +13,9 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.GET("/api/command/status", controller.GetCommandStatus)
-	router.GET("/api/command", controller.PostCommands)
-	router.PUT("/api/command/{taskId}", controller.PostCancelCommands)
+	router.GET("/api/command/status", GetCommandStatus)
+	router.GET("/api/command", PostCommands)
+	router.PUT("/api/command/{taskId}", PostCancelCommands)
 
 	listenPort := os.Getenv("appPort")
 	if listenPort == "" {

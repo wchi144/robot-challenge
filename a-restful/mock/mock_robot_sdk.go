@@ -6,7 +6,7 @@ package mock_robotsdk
 
 import (
 	reflect "reflect"
-	interface0 "robot-api-golang/a-restful/interface"
+	interface0 "robot-api-golang/a-restful"
 
 	gomock "github.com/golang/mock/gomock"
 )

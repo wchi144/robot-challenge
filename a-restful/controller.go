@@ -1,26 +1,28 @@
-package controller
+package main
 
 import (
+	util "lindachin/robot-api-golang/utils"
 	"net/http"
-	robotsdk "robot-api-golang/a-restful/interface"
-	util "robot-api-golang/a-restful/utils"
 )
 
 var GetCommandStatus = func(w http.ResponseWriter, r *http.Request) {
-	status := robotsdk.Robot.CurrentState()
-	resp := util.Message(true, status)
+	var s Robot = Spot{}
+	status := s.CurrentState()
+	resp := util.Message(true, status.GetString())
 	resp["status"] = "robot status is g"
 	util.Respond(w, resp)
 }
 
 var PostCommands = func(w http.ResponseWriter, r *http.Request) {
-	robotsdk.Robot.EnqueueTask()
+	var s Robot = Spot{}
+	s.EnqueueTask("N E")
 	resp := util.Message(true, "Successful - queue command")
 	util.Respond(w, resp)
 }
 
 var PostCancelCommands = func(w http.ResponseWriter, r *http.Request) {
-	robotsdk.Robot.CancelTask()
+	var s Robot = Spot{}
+	s.CancelTask("123")
 	resp := util.Message(true, "Successful - canceled command")
 	util.Respond(w, resp)
 }

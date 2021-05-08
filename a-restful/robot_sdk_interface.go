@@ -1,4 +1,6 @@
-package robotsdk
+package main
+
+import "fmt"
 
 type Warehouse interface {
 	Robots() []Robot
@@ -16,4 +18,8 @@ type RobotState struct {
 	X        uint
 	Y        uint
 	HasCrate bool
+}
+
+func (r RobotState) GetString() string {
+	return fmt.Sprintf("%d %d %t", r.X, r.Y, r.HasCrate)
 }
