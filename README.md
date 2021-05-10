@@ -26,3 +26,16 @@ Example command sequences:
 * If the robot starts in the south-west corner of the warehouse then the following commands will move it to the middle of the warehouse: `"N E N E N E N E"`
 
 The robot will only perform a single task at a time: if additional tasks are given to the robot while is busy performing a task, those additional tasks are queued up, and will be executed once the preceding task is completed (or aborted for some reason).  Each task is identified with a unique string ID, and a task which is either in progress or enqueued can be aborted/cancelled at any time.  If the robot is unable to execute a particular command (for instance, because the command would cause the robot to run into the edges of the warehouse grid) then an error occurs, and the entire task is aborted.
+
+## How to Run API
+```
+cd spot-restfulapi
+go run main.go
+```
+Running on `http://localhost:8081/`
+
+## How to Run Test
+```
+cd spot-restfulapi
+go test ./...
+```

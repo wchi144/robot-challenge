@@ -28,6 +28,17 @@ func (mockClient *robotClientMock) CurrentState() robot_domain.RobotState {
 	return getStatusFunc()
 }
 
+func testBase() {
+	getStatusFunc = func() robot_domain.RobotState {
+		return robot_domain.RobotState{
+			X:        0,
+			Y:        0,
+			HasCrate: false,
+		}
+	}
+	robotclient.RobotStruct = &robotClientMock{}
+}
+
 func IsCommandValid_PositiveXY_NoError(t *testing.T) {
 	//Arrange
 	testBase()
@@ -62,15 +73,4 @@ func IsCommandValid_NegativeXY_Error(t *testing.T) {
 	//Assert
 	assert.False(t, isValid)
 	assert.NotNil(t, err)
-}
-
-func testBase() {
-	getStatusFunc = func() robot_domain.RobotState {
-		return robot_domain.RobotState{
-			X:        0,
-			Y:        0,
-			HasCrate: false,
-		}
-	}
-	robotclient.RobotStruct = &robotClientMock{}
 }
