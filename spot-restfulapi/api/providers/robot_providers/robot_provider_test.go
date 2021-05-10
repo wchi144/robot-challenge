@@ -14,29 +14,32 @@ var (
 	getStatusFunc     func() robot_domain.RobotState
 )
 
-type getClientMock struct{}
+type robotClientMock struct{}
 
 // Mock methods in robot client
-func (cm *getClientMock) EnqueueTask(commands string) (taskID string, position chan robot_domain.RobotState, err chan error) {
+func (mockClient *robotClientMock) EnqueueTask(commands string) (taskID string, position chan robot_domain.RobotState, err chan error) {
 	return getRequestFunc(commands)
 }
 
-func (cm *getClientMock) CancelTask(taskID string) error {
+func (mockClient *robotClientMock) CancelTask(taskID string) error {
 	return cancelRequestFunc(taskID)
 }
 
-func (cm *getClientMock) CurrentState() robot_domain.RobotState {
+func (mockClient *robotClientMock) CurrentState() robot_domain.RobotState {
 	return getStatusFunc()
 }
 
 func TestEnqueueNoError(t *testing.T) {
+	//Arrange
 	getRequestFunc = func(commands string) (taskID string, position chan robot_domain.RobotState, err chan error) {
 		return "123", make(chan robot_domain.RobotState), nil
 	}
+	robotclient.RobotStruct = &robotClientMock{}
 
-	// Mock robot client
-	robotclient.RobotStruct = &getClientMock{}
+	//Act
 	taskID, position, err := RobotProvider.EnqueueTask("N")
+
+	//Assert
 	assert.NotNil(t, taskID)
 	assert.NotNil(t, position)
 	assert.Nil(t, err)

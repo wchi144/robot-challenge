@@ -12,20 +12,19 @@ import (
 )
 
 var (
-	getStatusFunc func() robot_domain.RobotState
-	createTask    func(command string) (taskID string, position chan robot_domain.RobotState, err chan error)
-	cancelTask    func(taskID string) error
+	createTaskFunc func(command string) (taskID string, position chan robot_domain.RobotState, err chan error)
+	cancelTaskFunc func(taskID string) error
+	getStatusFunc  func() robot_domain.RobotState
 )
 
 type robotProviderMock struct{}
 
-//We are mocking the service method "GetWeather"
 func (r *robotProviderMock) EnqueueTask(command string) (taskID string, position chan robot_domain.RobotState, err chan error) {
-	return createTask(command)
+	return createTaskFunc(command)
 }
 
 func (r *robotProviderMock) CancelTask(taskID string) error {
-	return cancelTask(taskID)
+	return cancelTaskFunc(taskID)
 }
 
 func (r *robotProviderMock) CurrentState() robot_domain.RobotState {
@@ -33,6 +32,7 @@ func (r *robotProviderMock) CurrentState() robot_domain.RobotState {
 }
 
 func TestGetStatus(t *testing.T) {
+	//Arrange
 	getStatusFunc = func() robot_domain.RobotState {
 		return robot_domain.RobotState{
 			X:        4,
@@ -44,6 +44,10 @@ func TestGetStatus(t *testing.T) {
 	response := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(response)
 	c.Request, _ = http.NewRequest(http.MethodGet, "", nil)
+
+	//Act
 	GetStatus(c)
+
+	//Assert
 	assert.EqualValues(t, http.StatusOK, response.Code)
 }

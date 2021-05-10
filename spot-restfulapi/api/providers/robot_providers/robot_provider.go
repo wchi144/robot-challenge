@@ -5,10 +5,6 @@ import (
 	"spot-restfulapi/api/domain/robot_domain"
 )
 
-const (
-	sdkUrl = ""
-)
-
 type robotProvider struct{}
 
 type robotServiceInterface interface {
