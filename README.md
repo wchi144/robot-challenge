@@ -39,3 +39,12 @@ Running on `http://localhost:8081/`
 cd spot-restfulapi
 go test ./...
 ```
+
+## Challenge
+Question
+The ground control station wants to be notified as soon as the command sequence completed. Please provide a high level design overview how you can achieve it. This overview is not expected to be hugely detailed but should clearly articulate the fundamental concept in your design.
+
+### Architecture Design
+![image](https://user-images.githubusercontent.com/5085888/117626097-d9c4de00-b1ca-11eb-933c-b5c2106ca536.png)
+
+source: https://drive.google.com/file/d/111tTA61ZPmBx6S8atg8FVMYYdAwMydUR/view?usp=sharing
