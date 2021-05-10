@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"spot-restfulapi/api/domain/robot_domain"
-	robot_provider "spot-restfulapi/api/providers/robot_providers"
+	robot_service "spot-restfulapi/api/services/robot_service"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -17,17 +17,17 @@ var (
 	getStatusFunc  func() robot_domain.RobotState
 )
 
-type robotProviderMock struct{}
+type robotServiceMock struct{}
 
-func (r *robotProviderMock) EnqueueTask(command string) (taskID string, position chan robot_domain.RobotState, err chan error) {
+func (r *robotServiceMock) EnqueueTask(command string) (taskID string, position chan robot_domain.RobotState, err chan error) {
 	return createTaskFunc(command)
 }
 
-func (r *robotProviderMock) CancelTask(taskID string) error {
+func (r *robotServiceMock) CancelTask(taskID string) error {
 	return cancelTaskFunc(taskID)
 }
 
-func (r *robotProviderMock) CurrentState() robot_domain.RobotState {
+func (r *robotServiceMock) CurrentState() robot_domain.RobotState {
 	return getStatusFunc()
 }
 
@@ -40,7 +40,7 @@ func TestGetStatus(t *testing.T) {
 			HasCrate: false,
 		}
 	}
-	robot_provider.RobotProvider = &robotProviderMock{}
+	robot_service.RobotService = &robotServiceMock{}
 	response := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(response)
 	c.Request, _ = http.NewRequest(http.MethodGet, "", nil)

@@ -18,12 +18,14 @@ var (
 )
 
 func (v *robotValidator) IsCommandValid(command string) (isValid bool, err error) {
+	fmt.Println("command: " + command)
 	currentStatus := robotclient.RobotStruct.CurrentState()
 
 	northCount := uint(strings.Count(command, "N"))
 	southCount := uint(strings.Count(command, "S"))
 	finalY := currentStatus.Y - southCount + northCount
 	isYValid := 0 <= finalY && finalY <= 10
+	fmt.Printf("isYValid: %t", isYValid)
 	if !isYValid {
 		return false, errors.New(fmt.Sprintf("Invalid command. Cannot move %d unit on the y-axis", finalY))
 	}
@@ -32,6 +34,7 @@ func (v *robotValidator) IsCommandValid(command string) (isValid bool, err error
 	westCount := uint(strings.Count(command, "W"))
 	finalX := currentStatus.X - westCount + eastCount
 	isXValid := 0 <= finalX && finalX <= 10
+	fmt.Printf("isXValid: %t", isXValid)
 	if !isXValid {
 		return false, errors.New(fmt.Sprintf("Invalid command. Cannot move %d unit on the x-axis", finalX))
 	}

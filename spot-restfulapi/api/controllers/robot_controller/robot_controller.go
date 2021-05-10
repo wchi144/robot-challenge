@@ -1,10 +1,9 @@
 package robot_controller
 
 import (
-	"fmt"
 	"net/http"
 	"spot-restfulapi/api/domain/robot_domain"
-	robot_provider "spot-restfulapi/api/providers/robot_providers"
+	robot_service "spot-restfulapi/api/services/robot_service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,18 +12,17 @@ func PostCommand(c *gin.Context) {
 	var request robot_domain.RobotRequest
 	c.BindJSON(&request)
 	command := request.Commands
-	taskId, _, errorCh := robot_provider.RobotProvider.EnqueueTask(command)
-	select {
-	case err := <-errorCh:
-		fmt.Println("Error: ", err)
-		c.JSON(500, gin.H{"error": "could not enqueue task. Error: "})
+	taskId, _, _ := robot_service.RobotService.EnqueueTask(command)
+	if len(taskId) <= 0 {
+		c.JSON(500, gin.H{"error": "could not enqueue task"})
+		return
 	}
 	c.JSON(http.StatusOK, taskId)
 }
 
 func CancelCommand(c *gin.Context) {
 	taskID := c.Param("taskID")
-	err := robot_provider.RobotProvider.CancelTask(taskID)
+	err := robot_service.RobotService.CancelTask(taskID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "could not cancel task"})
 	}
@@ -32,6 +30,6 @@ func CancelCommand(c *gin.Context) {
 }
 
 func GetStatus(c *gin.Context) {
-	result := robot_provider.RobotProvider.CurrentState()
+	result := robot_service.RobotService.CurrentState()
 	c.JSON(http.StatusOK, result)
 }

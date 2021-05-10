@@ -1,4 +1,4 @@
-//Mocking Robot SDK
+//Mock Robot SDK
 package robotclient
 
 import (
@@ -24,8 +24,8 @@ var (
 func (r *robotStruct) EnqueueTask(commands string) (taskID string, position chan robot_domain.RobotState, err chan error) {
 	taskGuid := uuid.New()
 	var positionchan chan robot_domain.RobotState
-	var errorchan chan error
-	return taskGuid.String(), positionchan, errorchan
+	errCh := make(chan error)
+	return taskGuid.String(), positionchan, errCh
 }
 
 func (r *robotStruct) CancelTask(taskID string) error {
