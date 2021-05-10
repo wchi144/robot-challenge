@@ -26,3 +26,31 @@ Example command sequences:
 * If the robot starts in the south-west corner of the warehouse then the following commands will move it to the middle of the warehouse: `"N E N E N E N E"`
 
 The robot will only perform a single task at a time: if additional tasks are given to the robot while is busy performing a task, those additional tasks are queued up, and will be executed once the preceding task is completed (or aborted for some reason).  Each task is identified with a unique string ID, and a task which is either in progress or enqueued can be aborted/cancelled at any time.  If the robot is unable to execute a particular command (for instance, because the command would cause the robot to run into the edges of the warehouse grid) then an error occurs, and the entire task is aborted.
+
+## How to Run API
+```
+cd spot-restfulapi
+go run main.go
+```
+Running on `http://localhost:8081/`
+
+## How to Run Test
+```
+cd spot-restfulapi
+go test ./...
+```
+
+## Challenge
+Question
+The ground control station wants to be notified as soon as the command sequence completed. Please provide a high level design overview how you can achieve it. This overview is not expected to be hugely detailed but should clearly articulate the fundamental concept in your design.
+
+### Architecture Design
+![image](https://user-images.githubusercontent.com/5085888/117626097-d9c4de00-b1ca-11eb-933c-b5c2106ca536.png)
+
+This is a high level architecture design of how a control station (i.e. web/mobile app) can be notified when a command sequence is completed. The following is a brief explanation of each component.
+ 
+The API wwould be able to post command, delete command, and get current status via the robot's SDK as described in the requirement of the restful API. The API would also store the command (taskID, the command string, timestamp) in a database. This design is based on the robot being able to push sensory data into a data stream (e.g. AWS Kinesis). Data such as the location of the robot can be pushed to a service which would constantly check if it matches the final coordinate of the latest command. If coordinates show that the command has been completed a websocket API (AWS API Gateway) can push the completion status to a web/mobile app.
+
+If the robot is unable to stream sensory data, a service would need to compute the completion status based on the robot's starting position, the command and current position.
+
+source: https://drive.google.com/file/d/111tTA61ZPmBx6S8atg8FVMYYdAwMydUR/view?usp=sharing
